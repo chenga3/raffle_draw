@@ -39,9 +39,9 @@ def get_eligible_responses(responses):
     return eligible_responses
 
 
-def get_prize_winners(eligible_responses):
+def get_prize_winners(eligible_responses, seed):
     # Randomly draws two prize winners where chances are weighted proportional to number of points scored.
-    random.seed(0)
+    random.seed(seed)
 
     # Draw first place prize winner.
     cdf = get_cdf(eligible_responses)
@@ -66,15 +66,18 @@ def get_prize_winners(eligible_responses):
 if __name__ == "__main__":
 
     # Check that we have the correct number of command line arguments.
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 3:
         print('Usage:\n')
-        print('\t py ' + os.path.basename(__file__) + ' [responses_file]\n')
+        print('\t py ' + os.path.basename(__file__) +
+              ' [responses_file] [seed]\n')
         print('Arguments:\n')
         print('responses_file: CSV file containing quiz responses.')
+        print('seed: Seed for random number generator.')
         sys.exit(1)
 
     # Get filename of CSV file containing quiz responses from command line argument.
     filename = sys.argv[1]
+    seed = int(sys.argv[2])
 
     # Create QuizResponse objects for each response recorded in the file and store in list.
     responses = []
@@ -87,7 +90,7 @@ if __name__ == "__main__":
     eligible_responses = get_eligible_responses(responses)
 
     # Randomly draw our prize winners - chances are weighted by points scored.
-    first_place, second_place = get_prize_winners(eligible_responses)
+    first_place, second_place = get_prize_winners(eligible_responses, seed)
 
     print('\nFirst Place Winner !!')
     print(first_place)
